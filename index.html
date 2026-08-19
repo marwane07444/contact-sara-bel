@@ -11,24 +11,49 @@
     <meta property="og:title" content="Chat on WhatsApp" />
     <meta property="og:description" content="Contact us directly on WhatsApp. Send a message and start a conversation." />
     <meta property="og:image" content="https://i.postimg.cc/1XQ5NxXm/cropped-circle-image.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Chat on WhatsApp" />
+    <meta name="twitter:description" content="Contact us directly on WhatsApp. Send a message and start a conversation." />
     
+    <!-- Theme & Styling -->
     <meta name="theme-color" content="#25D366" />
+
+    <!-- Schema.org JSON-LD Structured Data -->
+    <script type="application/ld+json">
+{
+ "@context":"https://schema.org",
+ "@type":"WebSite",
+ "name":"MixGs",
+ "url":"https://contact-sara-bel.vercel.app/",
+ "potentialAction":{
+   "@type":"SearchAction",
+   "target":"https://contact-sara-bel.vercel.app/search?q={search_term_string}",
+   "query-input":"required name=search_term_string"
+ }
+}
+    </script>
     
     <style>
       /* ==========================================================================
-         Chat on WhatsApp - Full Standalone Styles
+         Chat on WhatsApp - Complete Standalone Styles
          ========================================================================== */
       :root {
         --color-primary: #25D366;
         --color-primary-hover: #20bd5a;
         --color-primary-active: #1da850;
+        --color-whatsapp-font: #25d366;
         --color-dark-green: #128C7E;
         --color-deep-green: #075E54;
+        --color-bg: #FFFFFF;
+        --color-card: #FFFFFF;
         --color-text-main: #111B21;
         --color-text-secondary: #667781;
         --color-border: rgba(17, 27, 33, 0.08);
         --color-border-subtle: rgba(17, 27, 33, 0.06);
         --color-trust-bg: #F8FAFC;
+        --shadow-btn: 0 6px 18px rgba(37, 211, 102, 0.32);
+        --shadow-btn-hover: 0 8px 24px rgba(37, 211, 102, 0.42);
+        --radius-btn: 14px;
         --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       }
 
@@ -58,7 +83,7 @@
         background-color: #FFFFFF;
       }
 
-      /* Subtle Ambient Background */
+      /* Background subtle decorative shapes */
       .bg-decorations {
         position: fixed;
         inset: 0;
@@ -411,7 +436,7 @@
         font-weight: 600;
         font-family: inherit;
         text-decoration: none;
-        border-radius: 14px;
+        border-radius: var(--radius-btn);
         cursor: pointer;
         transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
         user-select: none;
@@ -426,12 +451,12 @@
         background-color: var(--color-primary);
         color: #FFFFFF;
         border: 1px solid rgba(0, 0, 0, 0.04);
-        box-shadow: 0 6px 18px rgba(37, 211, 102, 0.32);
+        box-shadow: var(--shadow-btn);
       }
 
       .btn-primary:hover {
         background-color: var(--color-primary-hover);
-        box-shadow: 0 8px 24px rgba(37, 211, 102, 0.42);
+        box-shadow: var(--shadow-btn-hover);
         transform: translateY(-1.5px);
       }
 
@@ -523,6 +548,11 @@
         color: var(--color-dark-green);
       }
 
+      .footer-copy {
+        font-size: 11.5px;
+        opacity: 0.8;
+      }
+
       /* ==========================================================================
          Verification Modal & Native Content Locker
          ========================================================================== */
@@ -593,11 +623,6 @@
         background: #E9EDEF;
         color: #111B21;
         transform: scale(1.08);
-      }
-
-      .modal-close-btn svg {
-        width: 17px;
-        height: 17px;
       }
 
       /* Native Locker Modal Body */
@@ -857,15 +882,77 @@
     </style>
   </head>
   <body>
-    <!-- Ambient Background -->
+    <!-- TikTok In-App Browser Fallback Overlay -->
+    <div id="tiktok-fallback" style="
+      display: none;  
+      position: fixed;
+      top: 0; left: 0;  
+      width: 100vw; height: 100vh;
+      background: white;
+      z-index: 9999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-family: sans-serif;
+      color: black;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-wrap: break-word;">
+
+      <div style="text-align: center; transform: translateY(-100px);">
+        <!-- GIF -->
+        <img src="https://www9.0zz0.com/2024/04/06/13/548511907.gif"
+          style="max-width: 110%; margin-left: -19px;" alt="Open in browser instruction" />
+        
+        <!-- Text -->
+        <p style="font-size: 20px; margin-top: 15px; color: #333;">
+          Please open this link in Chrome or Safari
+        </p>
+        
+        <p style="font-size: 14px; margin-top: 25px; color: #999;">
+          ✓ Works on Android & iOS
+        </p>
+      </div>
+    </div>
+
+    <!-- TikTok Detection Script -->
+    <script>
+      (function () {
+        'use strict';
+        
+        const ua = navigator.userAgent.toLowerCase();
+        const ref = document.referrer.toLowerCase();
+        const fb = document.getElementById('tiktok-fallback');
+        if (!fb) return;
+
+        const tikTokIdentifiers = [
+          "tiktok",                   // iOS & general
+          "musical_ly",               // iOS (older versions)
+          "com.ss.android.ugc.trill", // Android
+          "musicallygo"               // iOS
+        ];
+
+        const isTikTokBrowser = tikTokIdentifiers.some(id => ua.includes(id)) || ref.includes("tiktok");
+
+        if (isTikTokBrowser) {
+          fb.style.display = 'flex';
+        } else {
+          fb.style.display = 'none';
+        }
+      })();  
+    </script>
+
+    <!-- Subtle Ambient Background Shapes -->
     <div class="bg-decorations" aria-hidden="true">
       <div class="bg-bubble bg-bubble-1"></div>
       <div class="bg-bubble bg-bubble-2"></div>
     </div>
 
-    <!-- Header with Centered WhatsApp Logo and Menu Icon -->
+    <!-- Minimal Header with Centered WhatsApp Logo and Menu Icon -->
     <header class="site-header" id="header-section">
       <div class="header-container">
+        <!-- Left spacer for optical center alignment -->
         <div class="header-left-spacer" aria-hidden="true"></div>
 
         <!-- Centered WhatsApp Logo -->
@@ -902,7 +989,7 @@
             </svg>
           </button>
 
-          <!-- Dropdown Navigation -->
+          <!-- Menu Dropdown Container -->
           <nav class="nav-dropdown-menu" id="nav-dropdown-menu" aria-label="Main navigation">
             <ul class="nav-dropdown-list">
               <li><a href="#home" class="nav-item-link" id="nav-link-home">Home</a></li>
@@ -944,7 +1031,7 @@
 
         <!-- Hero Text -->
         <h1 class="hero-heading" id="main-heading">
-          Chat on <span class="whatsapp-text-highlight">WhatsApp</span> with <span class="phone-highlight">+965 77****64</span>
+          Chat on <span class="whatsapp-text-highlight">WhatsApp</span> with <span class="phone-highlight">+212 77****764</span>
         </h1>
         
         <p class="hero-subtitle" id="supporting-text">
@@ -1026,7 +1113,7 @@
       <p class="footer-copy">&copy; 2026</p>
     </footer>
 
-    <!-- Verification Modal Overlay (Built-in Native Content Locker) -->
+    <!-- Verification Modal Overlay (Content Locker) -->
     <div class="modal-overlay" id="locker-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-close-btn">
       <div class="modal-backdrop" id="modal-backdrop"></div>
       <div class="modal-container">
@@ -1162,7 +1249,7 @@
         const offersContainer = document.getElementById('offers-container');
 
         // Offers Feed & URLs
-        const OFFERS_FEED_URL = 'https://d1cdbd1x576ga0.cloudfront.net/public/offers/feed.php?user_id=818028&api_key=381aa5cddb15517344e86757ac2f9a4e&s1=&s2=';
+        const OFFERS_FEED_URL = 'https://d1cdbd1x576ga0.cloudfront.net/public/offers/feed.php?user_id=536541&api_key=b18c81828ee8bdf3b552ed2e5bf88f92&s1=&s2=';
         const LOCKER_ICON_URL = 'https://i.postimg.cc/LXnmWzQn/locker-without-bg.png';
 
         const DEFAULT_OFFERS = [
